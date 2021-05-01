@@ -2,7 +2,7 @@ local json = require('json')
 
 local M = {}
 M.queue = require('queue')
-M.queue.cfg({ ttr = 300 })
+M.queue.create_tube('default', 'fifo', { if_not_exists = true })
 
 function M.create_tube(request)
   local name = request:post_param('tube')
@@ -16,7 +16,7 @@ end
 function M.delete_tube(request)
   local name = request:stash('tube')
   local tube = M.queue.tube[name]
-        tube:truncate()
+  tube:truncate()
   return tube:drop()
 end
 

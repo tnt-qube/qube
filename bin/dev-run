@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
 tarantool init.lua
-rm -rf *.snap *.xlog *.log
+rm -rf *.snap *.xlog
+# rm -rf /var/backup/qube/*
 clear

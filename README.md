@@ -6,8 +6,9 @@ HTTP API layer over Tarantool Queue.
 
 1. Install [Tarantool](https://github.com/tarantool/tarantool) or `brew install tarantool`
 2. Install [Queue](https://github.com/tarantool/queue) or `tarantoolctl rocks install queue`
-2. `git clone https://github.com/tnt-qube/qube`
-3. Edit config:
+3. Install [HTTP](https://github.com/tarantool/http) or `tarantoolctl rocks install http`
+4. `git clone https://github.com/tnt-qube/qube`
+5. Edit config:
 
 ```lua
 -- config.lua

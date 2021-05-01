@@ -1,19 +1,16 @@
-local json   = require('json')
-local config = require('config')
+require('strict').on()
 
-box.cfg(config.tarantool.node) -- or box.cfg{} for local dev
+local config = require('config')
+box.cfg(config.tarantool.node)
+
+local json    = require('json')
+local qube    = require('lib.qube')
+local shipper = require('lib.shipper')
+      shipper.start()
 
 local http_router = require('http.router')
 local http_server = require('http.server')
 local tsgi        = require('http.tsgi')
-
-local qube = require('lib.qube')
--- local xray = require('lib.xray')
-
-box.once('access', function()
-   box.schema.user.create(config.tarantool.user, { password = config.tarantool.password })
-   box.schema.user.grant(config.tarantool.user,  'read,write,execute', 'universe')
-end)
 
 local function send_response(code, payload)
   if not type(payload) == 'table' then
@@ -26,7 +23,7 @@ end
 local function auth_request(env)
   local request_token = env:header('x-auth-token')
   if not request_token == config.http.token then
-    return send_response(403, 'Failed to authorize request')
+    return send_response(403, 'Failed to authenticate request')
   else
     return tsgi.next(env)
   end
