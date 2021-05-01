@@ -6,12 +6,13 @@ box.cfg(config.tarantool.node)
 local json    = require('json')
 local qube    = require('lib.qube')
 local shipper = require('lib.shipper')
-      shipper.start()
+shipper.start()
 
 local http_router = require('http.router')
 local http_server = require('http.server')
 local tsgi        = require('http.tsgi')
 
+-- Push response to client
 local function send_response(code, payload)
   if not type(payload) == 'table' then
     return { status = code, body = json.encode({ message = tostring(payload) }) }
@@ -20,6 +21,7 @@ local function send_response(code, payload)
   end
 end
 
+-- Authenticate request before process
 local function auth_request(env)
   local request_token = env:header('x-auth-token')
   if not request_token == config.http.token then
@@ -29,6 +31,7 @@ local function auth_request(env)
   end
 end
 
+-- Forward request to handle accordingly to table 'routes'
 local function forward_request(controller, request)
   local success, result = pcall(qube[controller], request)
   if not success then
@@ -38,6 +41,7 @@ local function forward_request(controller, request)
   end
 end
 
+-- List of supported routes
 local routes = {
   { method = 'GET',    path = '/tubes',                    controller = 'tube_list'   },
   { method = 'POST',   path = '/tubes',                    controller = 'create_tube' },
