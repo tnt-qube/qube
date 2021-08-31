@@ -37,20 +37,20 @@ function M.serialize(task)
   }
 end
 
--- Taking the new task from channel
--- and send to the external app
+-- Taking the new task from the channel and send it to external app
 function M.sender_worker()
   local webhook = config.shipper.webhook_url
   local options = M.client_opts
   local queue   = M.queue
 
   -- Save fiber session id
-  M.transport.sender.sid = queue.identify()
+  M.transport.sender.sid = M.queue.identify()
+
   while true do
     if M.transport.tunnel:is_empty() then
       logger.debug('Sender: channel is empty')
       fiber.testcancel()
-      fiber.sleep(config.shipper.task_check)
+      fiber.sleep(config.shipper.delay)
     else
       local task = M.transport.tunnel:get(0)
       logger.debug('Sender: received new task')
@@ -60,8 +60,7 @@ function M.sender_worker()
       if success then
         local tube_name = task['tube']
 
-        -- Before call ack need apply finder's session
-        -- or will be raised 'Task was not taken'
+        -- Before call ack need to apply finder's session to prevent error 'Task was not taken'
         queue.identify(M.transport.finder.sid)
         local ok, resp = pcall(function()
           return M.queue.tube[tube_name]:ack(task['task_id'])
@@ -75,13 +74,12 @@ function M.sender_worker()
         logger.error('Sender: failed to shipped task: ' .. tostring(push_err))
       end
       fiber.testcancel()
-      fiber.sleep(config.shipper.task_check)
+      fiber.sleep(config.shipper.delay)
     end
   end
 end
 
--- Iterating over tubes, find new task
--- and pass to the sender_worker
+-- Iterating over tubes, find new task and pass it to the sender_worker
 function M.finder_worker()
   local queue = M.queue
   M.transport.finder.sid = queue.identify()
@@ -101,7 +99,7 @@ function M.finder_worker()
       end
     end
     fiber.testcancel()
-    fiber.sleep(config.shipper.task_check)
+    fiber.sleep(config.shipper.delay)
   end
 end
 

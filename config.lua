@@ -4,15 +4,17 @@ local Config = {}
 Config.tarantool = {
   access = {
     user     = 'qube',
-    password = '77c04ced3f915240d0c5d8d5819f84c7',
+    password = '1234567890',
   },
   node = {
-    pid_file          = '/var/run/qube.pid',
+    pid_file          = './tmp/qube.pid',
+    -- pid_file          = '/var/run/qube.pid',
     memtx_memory      = 1024 * 1024 * 1024 * 1,
-    memtx_dir         = './',
-    wal_dir           = './',
+    memtx_dir         = './tmp',
+    wal_dir           = './tmp',
     background        = false,
     custom_proc_title = 'qube',
+    log_level         = 5,
     -- log_format        = 'json'
   }
 }
@@ -29,11 +31,11 @@ Config.http = {
 
 -- Shipper
 Config.shipper = {
-  enable       = true,
-  user_agent   = 'QubeShipper',
-  token        = '77c04ced3f915240d0c5d8d5819f84c7',
-  webhook_url  = 'http://localhost:3000/qube/_jobs',
-  task_check   = 1
+  enable      = true,
+  user_agent  = 'QubeShipper',
+  token       = '77c04ced3f915240d0c5d8d5819f84c7',
+  webhook_url = 'http://localhost:3000/_jobs',
+  delay       = 0
 }
 
 return Config

@@ -6,7 +6,7 @@ box.cfg(config.tarantool.node)
 local json    = require('json')
 local qube    = require('lib.qube')
 local shipper = require('lib.shipper')
-shipper.start()
+      shipper.start()
 
 local http_router = require('http.router')
 local http_server = require('http.server')
@@ -49,6 +49,7 @@ local routes = {
   { method = 'POST',   path = '/tubes/:tube',              controller = 'add_task'    },
   { method = 'GET',    path = '/tubes/:tube',              controller = 'take_task'   },
   { method = 'PUT',    path = '/tubes/:tube/:task_id/ack', controller = 'ack_task'    },
+  { method = 'POST',   path = '/jobs',                     controller = 'jobs'        },
 }
 
 local router = http_router.new()

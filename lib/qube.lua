@@ -1,4 +1,5 @@
 local json = require('json')
+-- local xray = require('lib.xray')
 
 local M = {}
 M.queue = require('queue')
@@ -54,6 +55,20 @@ function M.tube_list(_)
     table.insert(list, tube)
   end
   return list
+end
+
+-- Special for Rails adapter
+function M.jobs(request)
+  local body = json.decode(request:read())
+  local tube_name = body['data']['queue_name']
+
+  if M.queue.tube[tube_name] == nil then
+    M.queue.create_tube(tube_name, 'fifo')
+  end
+  
+  if M.queue.tube[tube_name]:put(body['data']) then
+    return true
+  end
 end
 
 return M

@@ -10,3 +10,4 @@
 /lua/*.snap
 /lua/*.xlog
 /.rocks/
+/tmp
