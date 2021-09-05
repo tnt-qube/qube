@@ -49,7 +49,6 @@ function M.sender_worker()
   while true do
     if M.transport.tunnel:is_empty() then
       logger.debug('Sender: channel is empty')
-      fiber.testcancel()
       fiber.sleep(config.shipper.delay)
     else
       local task = M.transport.tunnel:get(0)
@@ -73,7 +72,6 @@ function M.sender_worker()
       else
         logger.error('Sender: failed to shipped task: ' .. tostring(push_err))
       end
-      fiber.testcancel()
       fiber.sleep(config.shipper.delay)
     end
   end
@@ -98,7 +96,6 @@ function M.finder_worker()
         logger.verbose('Finder: waiting for new task...')
       end
     end
-    fiber.testcancel()
     fiber.sleep(config.shipper.delay)
   end
 end
@@ -113,7 +110,6 @@ function M.start()
     local sender = M.transport.sender
     sender.fb = fiber.create(M.sender_worker)
     sender.fb:name('sender')
-
     return true
   else
     logger.error('Failed to start workers')

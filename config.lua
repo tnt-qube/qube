@@ -8,14 +8,12 @@ Config.tarantool = {
   },
   node = {
     pid_file          = './tmp/qube.pid',
-    -- pid_file          = '/var/run/qube.pid',
     memtx_memory      = 1024 * 1024 * 1024 * 1,
     memtx_dir         = './tmp',
     wal_dir           = './tmp',
     background        = false,
     custom_proc_title = 'qube',
     log_level         = 5,
-    -- log_format        = 'json'
   }
 }
 

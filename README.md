@@ -26,7 +26,6 @@ Config.tarantool = {
     wal_dir           = './',
     background        = false,
     custom_proc_title = 'qube',
-    -- log_format        = 'json'
   }
 }
 
@@ -34,19 +33,19 @@ Config.tarantool = {
 Config.http = {
   root         = '/api/v1',
   host         = '127.0.0.1',
-  port         = 5672,
+  port         = '5672',
   token        = '77c04ced3f915240d0c5d8d5819f84c7',
   log_requests = true,
   log_errors   = true
 }
 
--- Shipper (push tasks back to app)
+-- Shipper
 Config.shipper = {
-  enable       = true,
-  user_agent   = 'QubeShipper',
-  token        = '77c04ced3f915240d0c5d8d5819f84c7',
-  webhook_url  = 'http://localhost:3000/qube/_jobs',
-  task_check   = 1
+  enable      = true,
+  user_agent  = 'QubeShipper',
+  token       = '77c04ced3f915240d0c5d8d5819f84c7',
+  webhook_url = 'http://localhost:3000/_jobs',
+  delay       = 0
 }
 ```
 
